@@ -392,7 +392,7 @@ ALTER SEQUENCE imagenes_gabinetes_id_resultado_gabinete_seq OWNED BY imagenes_ga
 --
 
 CREATE TABLE medicos (
-    id_medico bigint NOT NULL,
+    id_medico integer NOT NULL,
     id_persona integer NOT NULL,
     codigo_especialidad character varying(4),
     matricula_min_salud character varying(20),
@@ -404,6 +404,27 @@ CREATE TABLE medicos (
 
 
 ALTER TABLE medicos OWNER TO paracelso;
+
+--
+-- Name: medicos_id_medico_seq; Type: SEQUENCE; Schema: paracelso; Owner: paracelso
+--
+
+CREATE SEQUENCE medicos_id_medico_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE medicos_id_medico_seq OWNER TO paracelso;
+
+--
+-- Name: medicos_id_medico_seq; Type: SEQUENCE OWNED BY; Schema: paracelso; Owner: paracelso
+--
+
+ALTER SEQUENCE medicos_id_medico_seq OWNED BY medicos.id_medico;
+
 
 --
 -- Name: migrations; Type: TABLE; Schema: paracelso; Owner: postgres
@@ -639,7 +660,7 @@ ALTER TABLE pa_cie10 OWNER TO paracelso;
 --
 
 CREATE TABLE pa_comisiones (
-    id_comision smallint NOT NULL,
+    id_comision integer NOT NULL,
     id_institucion smallint NOT NULL,
     fecha character varying(100),
     comision numeric,
@@ -648,6 +669,27 @@ CREATE TABLE pa_comisiones (
 
 
 ALTER TABLE pa_comisiones OWNER TO paracelso;
+
+--
+-- Name: pa_comisiones_id_comision_seq; Type: SEQUENCE; Schema: paracelso; Owner: paracelso
+--
+
+CREATE SEQUENCE pa_comisiones_id_comision_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE pa_comisiones_id_comision_seq OWNER TO paracelso;
+
+--
+-- Name: pa_comisiones_id_comision_seq; Type: SEQUENCE OWNED BY; Schema: paracelso; Owner: paracelso
+--
+
+ALTER SEQUENCE pa_comisiones_id_comision_seq OWNED BY pa_comisiones.id_comision;
+
 
 --
 -- Name: pa_diagnosticos; Type: TABLE; Schema: paracelso; Owner: paracelso
@@ -673,10 +715,10 @@ COMMENT ON TABLE pa_diagnosticos IS 'eliminar tratamiento agregar tipo (quirurgi
 
 
 --
--- Name: pa_dominio; Type: TABLE; Schema: paracelso; Owner: paracelso
+-- Name: pa_dominios; Type: TABLE; Schema: paracelso; Owner: paracelso
 --
 
-CREATE TABLE pa_dominio (
+CREATE TABLE pa_dominios (
     codigo_dominio character varying(6) NOT NULL,
     nombre character varying(255),
     descripcion character varying(500),
@@ -684,29 +726,30 @@ CREATE TABLE pa_dominio (
 );
 
 
-ALTER TABLE pa_dominio OWNER TO paracelso;
+ALTER TABLE pa_dominios OWNER TO paracelso;
 
 --
--- Name: pa_institucion; Type: TABLE; Schema: paracelso; Owner: paracelso
+-- Name: pa_instituciones; Type: TABLE; Schema: paracelso; Owner: paracelso
 --
 
-CREATE TABLE pa_institucion (
+CREATE TABLE pa_instituciones (
     id_institucion integer NOT NULL,
     codigo_institucion character varying(6),
+    tipo_institucion character varying(12),
     nombre character varying(50) NOT NULL,
     descripcion character varying(100),
     direccion character varying(100),
-    estado character varying(2) NOT NULL
+    estado character varying(3) NOT NULL
 );
 
 
-ALTER TABLE pa_institucion OWNER TO paracelso;
+ALTER TABLE pa_instituciones OWNER TO paracelso;
 
 --
--- Name: pa_institucion_id_institucion_seq; Type: SEQUENCE; Schema: paracelso; Owner: paracelso
+-- Name: pa_instituciones_id_institucion_seq; Type: SEQUENCE; Schema: paracelso; Owner: paracelso
 --
 
-CREATE SEQUENCE pa_institucion_id_institucion_seq
+CREATE SEQUENCE pa_instituciones_id_institucion_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -714,13 +757,13 @@ CREATE SEQUENCE pa_institucion_id_institucion_seq
     CACHE 1;
 
 
-ALTER TABLE pa_institucion_id_institucion_seq OWNER TO paracelso;
+ALTER TABLE pa_instituciones_id_institucion_seq OWNER TO paracelso;
 
 --
--- Name: pa_institucion_id_institucion_seq; Type: SEQUENCE OWNED BY; Schema: paracelso; Owner: paracelso
+-- Name: pa_instituciones_id_institucion_seq; Type: SEQUENCE OWNED BY; Schema: paracelso; Owner: paracelso
 --
 
-ALTER SEQUENCE pa_institucion_id_institucion_seq OWNED BY pa_institucion.id_institucion;
+ALTER SEQUENCE pa_instituciones_id_institucion_seq OWNED BY pa_instituciones.id_institucion;
 
 
 --
@@ -754,6 +797,45 @@ CREATE TABLE pa_transacciones (
 
 
 ALTER TABLE pa_transacciones OWNER TO paracelso;
+
+--
+-- Name: pacientes; Type: TABLE; Schema: paracelso; Owner: paracelso
+--
+
+CREATE TABLE pacientes (
+    id_paciente integer NOT NULL,
+    id_persona integer NOT NULL,
+    codigo_institucion character varying(4) NOT NULL,
+    codigo_seguro character varying(20),
+    matricula_seguro character varying(20),
+    religion character varying(20),
+    observaciones character varying(200),
+    estado character varying(3)
+);
+
+
+ALTER TABLE pacientes OWNER TO paracelso;
+
+--
+-- Name: pacientes_id_paciente_seq; Type: SEQUENCE; Schema: paracelso; Owner: paracelso
+--
+
+CREATE SEQUENCE pacientes_id_paciente_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE pacientes_id_paciente_seq OWNER TO paracelso;
+
+--
+-- Name: pacientes_id_paciente_seq; Type: SEQUENCE OWNED BY; Schema: paracelso; Owner: paracelso
+--
+
+ALTER SEQUENCE pacientes_id_paciente_seq OWNED BY pacientes.id_paciente;
+
 
 --
 -- Name: pagos_consultas; Type: TABLE; Schema: paracelso; Owner: paracelso
@@ -884,8 +966,8 @@ ALTER SEQUENCE patologicos_id_patologico_seq OWNED BY patologicos.id_patologico;
 CREATE TABLE personas (
     id_persona integer NOT NULL,
     id_bitacora bigint,
-    nombre character varying(50),
-    ap_paterno character varying(50),
+    nombre character varying(50) NOT NULL,
+    ap_paterno character varying(50) NOT NULL,
     ap_materno character varying(50),
     fecha_nacimiento date,
     documento_identidad character varying(10),
@@ -1462,6 +1544,13 @@ ALTER TABLE ONLY imagenes_gabinetes ALTER COLUMN id_resultado_gabinete SET DEFAU
 
 
 --
+-- Name: id_medico; Type: DEFAULT; Schema: paracelso; Owner: paracelso
+--
+
+ALTER TABLE ONLY medicos ALTER COLUMN id_medico SET DEFAULT nextval('medicos_id_medico_seq'::regclass);
+
+
+--
 -- Name: id_no_patologico; Type: DEFAULT; Schema: paracelso; Owner: paracelso
 --
 
@@ -1490,10 +1579,24 @@ ALTER TABLE ONLY ordenes_laboratorios ALTER COLUMN id_orden_laboratorio SET DEFA
 
 
 --
+-- Name: id_comision; Type: DEFAULT; Schema: paracelso; Owner: paracelso
+--
+
+ALTER TABLE ONLY pa_comisiones ALTER COLUMN id_comision SET DEFAULT nextval('pa_comisiones_id_comision_seq'::regclass);
+
+
+--
 -- Name: id_institucion; Type: DEFAULT; Schema: paracelso; Owner: paracelso
 --
 
-ALTER TABLE ONLY pa_institucion ALTER COLUMN id_institucion SET DEFAULT nextval('pa_institucion_id_institucion_seq'::regclass);
+ALTER TABLE ONLY pa_instituciones ALTER COLUMN id_institucion SET DEFAULT nextval('pa_instituciones_id_institucion_seq'::regclass);
+
+
+--
+-- Name: id_paciente; Type: DEFAULT; Schema: paracelso; Owner: paracelso
+--
+
+ALTER TABLE ONLY pacientes ALTER COLUMN id_paciente SET DEFAULT nextval('pacientes_id_paciente_seq'::regclass);
 
 
 --
@@ -1749,6 +1852,13 @@ COPY medicos (id_medico, id_persona, codigo_especialidad, matricula_min_salud, m
 
 
 --
+-- Name: medicos_id_medico_seq; Type: SEQUENCE SET; Schema: paracelso; Owner: paracelso
+--
+
+SELECT pg_catalog.setval('medicos_id_medico_seq', 1, false);
+
+
+--
 -- Data for Name: migrations; Type: TABLE DATA; Schema: paracelso; Owner: postgres
 --
 
@@ -1851,6 +1961,13 @@ COPY pa_comisiones (id_comision, id_institucion, fecha, comision, estado) FROM s
 
 
 --
+-- Name: pa_comisiones_id_comision_seq; Type: SEQUENCE SET; Schema: paracelso; Owner: paracelso
+--
+
+SELECT pg_catalog.setval('pa_comisiones_id_comision_seq', 1, false);
+
+
+--
 -- Data for Name: pa_diagnosticos; Type: TABLE DATA; Schema: paracelso; Owner: paracelso
 --
 
@@ -1859,26 +1976,26 @@ COPY pa_diagnosticos (codigo_diagnostico, codigo_cie, nombre, descripcion, trata
 
 
 --
--- Data for Name: pa_dominio; Type: TABLE DATA; Schema: paracelso; Owner: paracelso
+-- Data for Name: pa_dominios; Type: TABLE DATA; Schema: paracelso; Owner: paracelso
 --
 
-COPY pa_dominio (codigo_dominio, nombre, descripcion, estado) FROM stdin;
+COPY pa_dominios (codigo_dominio, nombre, descripcion, estado) FROM stdin;
 \.
 
 
 --
--- Data for Name: pa_institucion; Type: TABLE DATA; Schema: paracelso; Owner: paracelso
+-- Data for Name: pa_instituciones; Type: TABLE DATA; Schema: paracelso; Owner: paracelso
 --
 
-COPY pa_institucion (id_institucion, codigo_institucion, nombre, descripcion, direccion, estado) FROM stdin;
+COPY pa_instituciones (id_institucion, codigo_institucion, tipo_institucion, nombre, descripcion, direccion, estado) FROM stdin;
 \.
 
 
 --
--- Name: pa_institucion_id_institucion_seq; Type: SEQUENCE SET; Schema: paracelso; Owner: paracelso
+-- Name: pa_instituciones_id_institucion_seq; Type: SEQUENCE SET; Schema: paracelso; Owner: paracelso
 --
 
-SELECT pg_catalog.setval('pa_institucion_id_institucion_seq', 1, false);
+SELECT pg_catalog.setval('pa_instituciones_id_institucion_seq', 1, false);
 
 
 --
@@ -1896,6 +2013,21 @@ COPY pa_medicamentos (codigo_medicamento, nombre_comercial, nombre_medico, codig
 COPY pa_transacciones (codigo_transaccion, descripcion, abreviacion, fecha, estado) FROM stdin;
 100	Registro Persona	RP	2016-06-09 00:00:00	AC
 \.
+
+
+--
+-- Data for Name: pacientes; Type: TABLE DATA; Schema: paracelso; Owner: paracelso
+--
+
+COPY pacientes (id_paciente, id_persona, codigo_institucion, codigo_seguro, matricula_seguro, religion, observaciones, estado) FROM stdin;
+\.
+
+
+--
+-- Name: pacientes_id_paciente_seq; Type: SEQUENCE SET; Schema: paracelso; Owner: paracelso
+--
+
+SELECT pg_catalog.setval('pacientes_id_paciente_seq', 1, false);
 
 
 --
@@ -1954,6 +2086,7 @@ COPY personas (id_persona, id_bitacora, nombre, ap_paterno, ap_materno, fecha_na
 3	1	Ariel	Ibarra	Veizaga	\N	\N	\N	\N	ariel@mail.com	782312	\N	Universo	\N	\N	AC
 4	9	MARIA	EXALTACION	ESPINOZA	\N	6394545	CI	\N	\N	2782312	68045666	Universo	\N	\N	AC
 5	9	JULIAN	JIMENEZ	PEREZ	\N	77777	PS	\N	\N	247555	874566	Universo	\N	\N	AC
+6	9	pedro	loayza	zarate	\N	477091212	ci	\N	\N	2121212	55454	Universo	\N	\N	AC
 \.
 
 
@@ -1961,7 +2094,7 @@ COPY personas (id_persona, id_bitacora, nombre, ap_paterno, ap_materno, fecha_na
 -- Name: personas_id_persona_seq; Type: SEQUENCE SET; Schema: paracelso; Owner: paracelso
 --
 
-SELECT pg_catalog.setval('personas_id_persona_seq', 5, true);
+SELECT pg_catalog.setval('personas_id_persona_seq', 6, true);
 
 
 --
@@ -2293,16 +2426,16 @@ ALTER TABLE ONLY pa_diagnosticos
 -- Name: pk_pa_dominio; Type: CONSTRAINT; Schema: paracelso; Owner: paracelso
 --
 
-ALTER TABLE ONLY pa_dominio
+ALTER TABLE ONLY pa_dominios
     ADD CONSTRAINT pk_pa_dominio PRIMARY KEY (codigo_dominio);
 
 
 --
--- Name: pk_pa_institucion; Type: CONSTRAINT; Schema: paracelso; Owner: paracelso
+-- Name: pk_pa_instituciones; Type: CONSTRAINT; Schema: paracelso; Owner: paracelso
 --
 
-ALTER TABLE ONLY pa_institucion
-    ADD CONSTRAINT pk_pa_institucion PRIMARY KEY (id_institucion);
+ALTER TABLE ONLY pa_instituciones
+    ADD CONSTRAINT pk_pa_instituciones PRIMARY KEY (id_institucion);
 
 
 --
@@ -2319,6 +2452,14 @@ ALTER TABLE ONLY pa_medicamentos
 
 ALTER TABLE ONLY pa_transacciones
     ADD CONSTRAINT pk_pa_transacciones PRIMARY KEY (codigo_transaccion);
+
+
+--
+-- Name: pk_pacientes; Type: CONSTRAINT; Schema: paracelso; Owner: paracelso
+--
+
+ALTER TABLE ONLY pacientes
+    ADD CONSTRAINT pk_pacientes PRIMARY KEY (id_paciente);
 
 
 --
@@ -2572,7 +2713,15 @@ ALTER TABLE ONLY ordenes_laboratorios
 --
 
 ALTER TABLE ONLY pa_comisiones
-    ADD CONSTRAINT fk_pa_comis_reference_pa_insti FOREIGN KEY (id_institucion) REFERENCES pa_institucion(id_institucion) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT fk_pa_comis_reference_pa_insti FOREIGN KEY (id_institucion) REFERENCES pa_instituciones(id_institucion) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_pacientes_reference_personas; Type: FK CONSTRAINT; Schema: paracelso; Owner: paracelso
+--
+
+ALTER TABLE ONLY pacientes
+    ADD CONSTRAINT fk_pacientes_reference_personas FOREIGN KEY (id_persona) REFERENCES personas(id_persona) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --
